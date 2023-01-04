@@ -1,0 +1,26 @@
+{
+  "name": "weather-cli",
+  "version": "1.0.0",
+  "description": "CLI for weather",
+  "main": "index.js",
+  "bin": "./index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "weather"
+  ],
+  "author": "Zhannur Akhmetkhanov",
+  "license": "ISC",
+  "homepage": "https://sumurai.kz",
+  "repository": {
+    "type": "git",
+    "url": "https://sumurai.kz"
+  },
+  "bugs": {
+    "url": "https://sumurai.kz",
+    "email": "jannuraidynuly@gmail.com"
+  }
+}
