@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import { getArgs } from "./helpers/args.js";
-import {printError, printHelp, printSuccess} from "./services/log.service.js";
+import {printError, printHelp, printSuccess, printWeather} from "./services/log.service.js";
 import {getKeyValue, saveKeyValue, TOKEN_DICTIONARY} from "./services/storage.service.js";
-import {getWeather} from "./services/api.service.js";
+import {getIcon, getWeather} from "./services/api.service.js";
 
 async function saveToken(token) {
     if (!token.length) {
@@ -33,7 +33,7 @@ async function saveCity(city) {
 async function getForCast() {
     try {
         const weather = await getWeather(process.env.CITY ?? await getKeyValue(TOKEN_DICTIONARY.city));
-        console.log(weather);
+        printWeather(weather, getIcon(weather?.weather[0]?.icon));
     } catch (e) {
         if (e?.response?.status === 404) {
             printError('Неверно указан город');
@@ -48,7 +48,7 @@ async function getForCast() {
 const initCLI = async () => {
     const args = getArgs(process.argv);
     if (args.h) {
-        printHelp()
+        return printHelp()
     }
     if (args.s) {
         return saveCity(args.s)
@@ -56,7 +56,7 @@ const initCLI = async () => {
     if (args.t) {
         return saveToken(args.t);
     }
-    await getForCast();
+    return await getForCast();
 }
 
 initCLI();
