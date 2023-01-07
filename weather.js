@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { getArgs } from "./helpers/args.js";
 import {printError, printHelp, printSuccess} from "./services/log.service.js";
-import {saveKeyValue, TOKEN_DICTIONARY} from "./services/storage.service.js";
+import {getKeyValue, saveKeyValue, TOKEN_DICTIONARY} from "./services/storage.service.js";
 import {getWeather} from "./services/api.service.js";
 
 async function saveToken(token) {
@@ -17,9 +17,22 @@ async function saveToken(token) {
     }
 }
 
+async function saveCity(city) {
+    if (!city.length) {
+        printError('Не передан city');
+        return;
+    }
+    try {
+        await saveKeyValue(TOKEN_DICTIONARY.city, city);
+        printSuccess('Город сохранен');
+    } catch (e) {
+        printError(e.message);
+    }
+}
+
 async function getForCast() {
     try {
-        const weather = await getWeather(process.env.CITY);
+        const weather = await getWeather(process.env.CITY ?? await getKeyValue(TOKEN_DICTIONARY.city));
         console.log(weather);
     } catch (e) {
         if (e?.response?.status === 404) {
@@ -38,7 +51,7 @@ const initCLI = async () => {
         printHelp()
     }
     if (args.s) {
-        // save city
+        return saveCity(args.s)
     }
     if (args.t) {
         return saveToken(args.t);
